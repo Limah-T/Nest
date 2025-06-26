@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Secrets
+.env
+
+# Git & logs
+.git
+*.log
+
+# OS/Editor junk
+.DS_Store
+*.swp
+
+node_modules
