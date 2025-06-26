@@ -19,3 +19,6 @@ env/
 *.swp
 
 node_modules
+
+.idea/                 # PyCharm
+.vscode/               # VS Code

@@ -1,0 +1,33 @@
+version: '3.8'  # optional but good practice
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: mysql:8.0  # specify a version to avoid surprises
+    restart: always
+    environment:
+      ENGINE: ${ENGINE}
+      NAME: ${NAME}
+      USER: ${USER}
+      PASSWORD: ${PASSWORD}
+      HOST: ${HOST}
+      PORT: ${PORT}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - .env
+
+volumes:
+  mysql_data:

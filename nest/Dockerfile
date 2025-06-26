@@ -1,14 +1,24 @@
-FROM python:3.13-slim
+# ---- base image ----
+FROM python:3.12-slim
 
-# Create the directory in the container as /app if it doesn't exist
-WORKDIR /app 
+# Prevent Python from writing .pyc files / buffering stdout
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
-# Copy dependency file first (improves cache usage) to the directory => /app/requirements.txt
-COPY requirements.txt .         
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-# Everything from build context → /app except the ones in the dockerignore
+# System deps (only if needed for compiled wheels)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python deps
+COPY requirements.txt .
+RUN pip install -U pip && pip install --no-cache-dir -r requirements.txt
+
+# Copy project code
 COPY . .
 
-# RUN the command below
+EXPOSE 8000
+
+# Default dev command.
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
